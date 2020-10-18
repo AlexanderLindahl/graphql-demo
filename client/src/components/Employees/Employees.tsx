@@ -1,10 +1,18 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import EmployeeCard from '../EmployeeCard/EmployeeCard'
-import { Query } from 'react-apollo'
+import { Query, QueryResult } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Typography } from '@material-ui/core'
+import { Redirect } from 'react-router-dom'
+import Loading from '../EmployeePage/Loading'
+import Error from '../EmployeePage/Error'
 
 const Employees = () => {
+  interface Employee {
+    id: string
+    firstName: string
+    lastName: string
+    title: string
+  }
   const GET_EMPLOYEES = gql`
     query employees {
       employees {
@@ -16,43 +24,29 @@ const Employees = () => {
     }
   `
   return (
-    <Fragment>
-      <Query query={GET_EMPLOYEES}>
-        {({ loading, error, data }: any) => {
-          if (loading) {
-            return (
-              <Typography component="h5" variant="h5">
-                {' '}
-                LOADING...
-              </Typography>
-            )
-          }
-          if (error)
-            return (
-              <Typography component="h5" variant="h5">
-                ERROR: {error.message}
-              </Typography>
-            )
-
-          const employees = data.employees
-
-          return (
-            <div>
-              {employees.map((employee: any) => {
-                return (
-                  <EmployeeCard
-                    id={employee.id}
-                    firstName={employee.firstName}
-                    lastName={employee.lastName}
-                    title={employee.title}
-                  />
-                )
-              })}
-            </div>
-          )
-        }}
-      </Query>
-    </Fragment>
+    <Query query={GET_EMPLOYEES}>
+      {({
+        loading,
+        error,
+        data,
+      }: QueryResult<{ employees: Employee[] }, Record<string, any>>) => {
+        return (
+          <>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <Error errorMessage={error.message} />
+            ) : data ? (
+              data.employees.map((employee, index) => {
+                return <EmployeeCard key={index} employee={employee} />
+              })
+            ) : (
+              <Redirect to="/" />
+            )}
+          </>
+        )
+      }}
+    </Query>
   )
 }
 

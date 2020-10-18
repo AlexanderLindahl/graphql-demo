@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
-import { useEmployeePageStyles } from '../../Style'
-import { useTheme } from '@material-ui/core/styles'
-import { Card, CardContent, Typography, Box } from '@material-ui/core'
+import React from 'react'
 import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
+import { Query, QueryResult } from 'react-apollo'
 import { Redirect } from 'react-router-dom'
+import Error from './Error'
+import Loading from './Loading'
+import EmployeeInfo from './EmployeeInfo'
 
 interface EmployeePageProps {
   match: { params: { id: string } }
@@ -36,73 +36,30 @@ const GET_EMPLOYEE = gql`
 `
 
 const EmployeePage = (props: EmployeePageProps) => {
-  const theme = useTheme()
-  const classes = useEmployeePageStyles(theme)
-
   const id = parseInt(props.match.params.id)
 
   return (
-    <Fragment>
-      <Query query={GET_EMPLOYEE} variables={{ id }}>
-        {({ loading, error, data }: any) => {
-          if (loading) {
-            return (
-              <Typography component="h5" variant="h5">
-                {' '}
-                LOADING...
-              </Typography>
-            )
-          }
-          if (error)
-            return (
-              <Typography component="h5" variant="h5">
-                ERROR: {error.message}
-              </Typography>
-            )
-          if (!data.employee) return <Redirect to="/" />
-
-          const employee = data.employee
-          return (
-            <Card className={classes.root}>
-              <div className={classes.details}>
-                <CardContent className={classes.content}>
-                  <Box component="span" m={1}>
-                    <Typography component="h2" variant="h2">
-                      {`${employee.firstName} ${employee.lastName}`}
-                    </Typography>
-                  </Box>
-                  <Box component="span" m={1}>
-                    <Typography variant="subtitle1">
-                      Roll: {employee.title}
-                    </Typography>
-                  </Box>
-                  <Box component="span" m={1}>
-                    <Typography variant="subtitle1">
-                      Adress: {employee.address}
-                    </Typography>
-                  </Box>
-                  <Box component="span" m={1}>
-                    <Typography variant="subtitle1">
-                      Telefonnummer: {employee.phoneNumber}
-                    </Typography>{' '}
-                  </Box>
-                  <Box component="span" m={1}>
-                    <Typography variant="subtitle1">
-                      Email: {employee.email}
-                    </Typography>{' '}
-                  </Box>
-                  <Box component="span" m={1}>
-                    <Typography variant="subtitle1">
-                      Anställd sedan: {employee.employmentDate}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </div>
-            </Card>
-          )
-        }}
-      </Query>
-    </Fragment>
+    <Query query={GET_EMPLOYEE} variables={{ id }}>
+      {({
+        loading,
+        error,
+        data,
+      }: QueryResult<{ employee: Employee }, Record<string, any>>) => {
+        return (
+          <>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <Error errorMessage={error.message} />
+            ) : data ? (
+              <EmployeeInfo employee={data.employee} />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </>
+        )
+      }}
+    </Query>
   )
 }
 

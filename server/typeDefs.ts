@@ -15,7 +15,6 @@ export default gql`
   type Query {
     employee(id: Int!): Employee
     employees: [Employee]
-    hello: String
   }
 
   type Mutation {

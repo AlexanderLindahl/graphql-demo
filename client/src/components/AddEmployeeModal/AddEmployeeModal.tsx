@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, TextField, Button, Typography } from '@material-ui/core'
-import { Mutation } from 'react-apollo'
+import { Mutation, MutationFunction } from 'react-apollo'
 import { useAddEmployeeStyles } from '../../Style'
 import gql from 'graphql-tag'
 
@@ -10,7 +10,7 @@ interface AddEmployeeModalProps {
 }
 
 const ADD_EMPLOYEE = gql`
-  mutation addEmployee(
+  mutation employee(
     $firstName: String
     $lastName: String
     $title: String
@@ -40,6 +40,14 @@ const AddEmployeeModal = (props: AddEmployeeModalProps) => {
   const [address, setAddress] = useState('')
   const [title, setTitle] = useState('')
 
+  interface EmployeeInput {
+    firstName: string
+    lastName: string
+    title: string
+    email: string
+    phoneNumber: string
+    address: string
+  }
   return (
     <Modal
       className={classes.modal}
@@ -49,16 +57,16 @@ const AddEmployeeModal = (props: AddEmployeeModalProps) => {
       aria-describedby="simple-modal-description"
     >
       <Mutation mutation={ADD_EMPLOYEE}>
-        {(addEmployee: any, { data }: any) => {
+        {(addEmployee: MutationFunction<string, EmployeeInput>) => {
           const submitEmployee = () => {
             addEmployee({
               variables: {
-                firstName: firstName,
-                lastName: lastName,
-                title: title,
-                email: email,
-                phoneNumber: phoneNumber,
-                address: address,
+                firstName,
+                lastName,
+                title,
+                email,
+                phoneNumber,
+                address,
               },
             }).then((res: any) => {
               window.location.href = `/employee/${res.data.addEmployee.id}`

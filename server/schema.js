@@ -48,7 +48,7 @@ const RootQuery = new GraphQLObjectType({
 
 const mutation = new GraphQLObjectType({
   name: 'mutation',
-  fields
+  fields,
   addEmployer: (employee) => {
     employees.push({
       employee,

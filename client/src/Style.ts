@@ -95,6 +95,7 @@ export const useEmployeeCardStyles = makeStyles((theme: Theme) =>
     details: {
       display: 'flex',
       flexDirection: 'column',
+      textAlign: 'left',
     },
     content: {
       flex: '1 0 auto',

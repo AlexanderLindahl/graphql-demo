@@ -7,7 +7,7 @@ interface EmployeeCardProps {
   employee: Employee
 }
 interface Employee {
-  id: string
+  id: number
   firstName: string
   lastName: string
   title: string

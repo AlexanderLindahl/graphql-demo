@@ -13,8 +13,8 @@ export default gql`
   }
 
   type Query {
-    employee(id: Int!): Employee
     employees: [Employee]
+    employee(id: Int!): Employee
   }
 
   type Mutation {

@@ -2,8 +2,8 @@ import { Employee, employees } from './employees'
 
 export default {
   Query: {
-    employee: (_, { id }) => findEmployeeById(id),
     employees: () => employees,
+    employee: (_, { id }) => findEmployeeById(id),
   },
   Mutation: {
     addEmployee: (_, params) => addEmployee(params),
@@ -19,7 +19,7 @@ const findEmployeeById = (id): Employee => {
 const addEmployee = (input: Employee) => {
   const today = new Date()
   const dd = String(today.getDate()).padStart(2, '0')
-  const mm = String(today.getMonth() + 1).padStart(2, '0') //January is 0!
+  const mm = String(today.getMonth() + 1).padStart(2, '0')
   const yyyy = today.getFullYear()
 
   const todayDate = mm + '/' + dd + '/' + yyyy

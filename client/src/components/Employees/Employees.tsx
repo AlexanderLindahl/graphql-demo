@@ -8,45 +8,39 @@ import Error from '../EmployeePage/Error'
 
 const Employees = () => {
   interface Employee {
-    id: string
+    id: number
     firstName: string
     lastName: string
     title: string
   }
-  const GET_EMPLOYEES = gql`
-    query employees {
-      employees {
-        id
-        firstName
-        lastName
-        title
-      }
-    }
-  `
+
+  const employees: Employee[] = [
+    {
+      id: 1,
+      firstName: 'Anders',
+      lastName: 'Karlsson',
+      title: 'Utvecklare',
+    },
+    {
+      id: 2,
+      firstName: 'Emma',
+      lastName: 'Andersson',
+      title: 'Utvecklare',
+    },
+    {
+      id: 3,
+      firstName: 'Anna',
+      lastName: 'Eriksson',
+      title: 'Divisionschef',
+    },
+  ]
+
   return (
-    <Query query={GET_EMPLOYEES}>
-      {({
-        loading,
-        error,
-        data,
-      }: QueryResult<{ employees: Employee[] }, Record<string, any>>) => {
-        return (
-          <>
-            {loading ? (
-              <Loading />
-            ) : error ? (
-              <Error errorMessage={error.message} />
-            ) : data ? (
-              data.employees.map((employee, index) => {
-                return <EmployeeCard key={index} employee={employee} />
-              })
-            ) : (
-              <Redirect to="/" />
-            )}
-          </>
-        )
-      }}
-    </Query>
+    <>
+      {employees.map((employee, index) => {
+        return <EmployeeCard key={index} employee={employee} />
+      })}
+    </>
   )
 }
 

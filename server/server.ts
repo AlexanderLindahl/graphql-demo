@@ -7,7 +7,7 @@ const server = new ApolloServer({
   resolvers,
 })
 
-const PORT = process.env.port || 9000
+const PORT = 9000
 
 server
   .listen(PORT)

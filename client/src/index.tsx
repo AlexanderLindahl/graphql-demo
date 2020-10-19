@@ -10,11 +10,10 @@ import { ApolloProvider } from 'react-apollo'
 const client = new ApolloClient({
   uri: 'http://localhost:9000/graphql',
 })
+
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 )

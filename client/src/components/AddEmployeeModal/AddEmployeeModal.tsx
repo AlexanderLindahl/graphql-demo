@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
-import { Modal, TextField, Button, Typography } from '@material-ui/core'
+import React from 'react'
+import { Modal } from '@material-ui/core'
 import { Mutation, MutationFunction } from 'react-apollo'
 import { useAddEmployeeStyles } from '../../Style'
 import gql from 'graphql-tag'
+import AddEmployeeForm from './AddEmployeeForm'
 
 interface AddEmployeeModalProps {
   setShowModal: (input: boolean) => void
   showModal: boolean
+}
+interface EmployeeInput {
+  firstName: string
+  lastName: string
+  title: string
+  email: string
+  phoneNumber: string
+  address: string
 }
 
 const ADD_EMPLOYEE = gql`
@@ -33,21 +42,7 @@ const ADD_EMPLOYEE = gql`
 const AddEmployeeModal = (props: AddEmployeeModalProps) => {
   const { showModal, setShowModal } = props
   const classes = useAddEmployeeStyles()
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [email, setEmail] = useState('')
-  const [address, setAddress] = useState('')
-  const [title, setTitle] = useState('')
 
-  interface EmployeeInput {
-    firstName: string
-    lastName: string
-    title: string
-    email: string
-    phoneNumber: string
-    address: string
-  }
   return (
     <Modal
       className={classes.modal}
@@ -58,94 +53,22 @@ const AddEmployeeModal = (props: AddEmployeeModalProps) => {
     >
       <Mutation mutation={ADD_EMPLOYEE}>
         {(addEmployee: MutationFunction<string, EmployeeInput>) => {
-          const submitEmployee = () => {
+          const submitEmployee = (input: EmployeeInput) => {
             addEmployee({
               variables: {
-                firstName,
-                lastName,
-                title,
-                email,
-                phoneNumber,
-                address,
+                firstName: input.firstName,
+                lastName: input.lastName,
+                title: input.title,
+                email: input.email,
+                phoneNumber: input.phoneNumber,
+                address: input.address,
               },
             }).then((res: any) => {
               window.location.href = `/employee/${res.data.addEmployee.id}`
             })
           }
 
-          return (
-            <div>
-              {' '}
-              <form className={classes.form} noValidate autoComplete="off">
-                <Typography variant="h6" className={classes.title}>
-                  Add New Employee
-                </Typography>
-                <TextField
-                  className={classes.input}
-                  label="First Name"
-                  variant="outlined"
-                  value={firstName}
-                  onChange={(e) => {
-                    setFirstName(e.target.value)
-                  }}
-                />
-                <TextField
-                  className={classes.input}
-                  label="Last Name"
-                  variant="outlined"
-                  value={lastName}
-                  onChange={(e) => {
-                    setLastName(e.target.value)
-                  }}
-                />
-                <TextField
-                  className={classes.input}
-                  label="Phone Number"
-                  variant="outlined"
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    setPhoneNumber(e.target.value)
-                  }}
-                />
-                <TextField
-                  className={classes.input}
-                  label="Email"
-                  variant="outlined"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                  }}
-                />
-                <TextField
-                  className={classes.input}
-                  label="Address"
-                  variant="outlined"
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value)
-                  }}
-                />
-                <TextField
-                  className={classes.input}
-                  label="Title"
-                  variant="outlined"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value)
-                  }}
-                />
-
-                <Button
-                  className={classes.submitButton}
-                  variant="contained"
-                  color="primary"
-                  onClick={submitEmployee}
-                >
-                  Submit
-                </Button>
-              </form>
-            </div>
-          )
+          return <AddEmployeeForm submitEmployee={submitEmployee} />
         }}
       </Mutation>
     </Modal>

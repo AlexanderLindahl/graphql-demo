@@ -20,47 +20,47 @@ export interface Employee {
   address: string
   employmentDate: string
 }
-const employees: Employee[] = [
-  {
-    id: 1,
-    firstName: 'Anders',
-    lastName: 'Karlsson',
-    title: 'Utvecklare',
-    email: 'Anders.Karlsson@forefront.se',
-    phoneNumber: '+46738017276',
-    address: 'Hittepåvägen 57B',
-    employmentDate: '10/9-2019',
-  },
-  {
-    id: 2,
-    firstName: 'Emma',
-    lastName: 'Andersson',
-    title: 'Utvecklare',
-    email: 'Emma.Andersson@forefront.se',
-    phoneNumber: '+46738017276',
-    address: 'Hittepåvägen 57B',
-    employmentDate: '1/6-2016',
-  },
-  {
-    id: 3,
-    firstName: 'Anna',
-    lastName: 'Eriksson',
-    title: 'Divisionschef',
-    email: 'Anna.Eriksson@forefront.se',
-    phoneNumber: '+46738017276',
-    address: 'Hittepåvägen 57B',
-    employmentDate: '27/6-2004',
-  },
-]
 
 const EmployeePage = (props: EmployeePageProps) => {
   const id = parseInt(props.match.params.id)
+  const GET_EMPLOYEE = gql`
+    query getEmployee($id: Int!) {
+      employee(id: $id) {
+        id
+        firstName
+        lastName
+        title
+        email
+        phoneNumber
+        address
+        employmentDate
+      }
+    }
+  `
 
-  const employee: Employee = employees.filter((employee) => {
-    return employee.id === id
-  })[0]
-
-  return <EmployeeInfo employee={employee} />
+  return (
+    <Query query={GET_EMPLOYEE} variables={{ id }}>
+      {({
+        loading,
+        error,
+        data,
+      }: QueryResult<{ employee: Employee }, Record<string, number>>) => {
+        return (
+          <>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <Error errorMessage={error.message} />
+            ) : data ? (
+              <EmployeeInfo employee={data.employee} />
+            ) : (
+              <Redirect to="" />
+            )}
+          </>
+        )
+      }}
+    </Query>
+  )
 }
 
 export default EmployeePage

@@ -2,7 +2,6 @@ import React from 'react'
 import EmployeeCard from '../EmployeeCard/EmployeeCard'
 import { Query, QueryResult } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Redirect } from 'react-router-dom'
 import Loading from '../EmployeePage/Loading'
 import Error from '../EmployeePage/Error'
 
@@ -14,33 +13,37 @@ const Employees = () => {
     title: string
   }
 
-  const employees: Employee[] = [
-    {
-      id: 1,
-      firstName: 'Anders',
-      lastName: 'Karlsson',
-      title: 'Utvecklare',
-    },
-    {
-      id: 2,
-      firstName: 'Emma',
-      lastName: 'Andersson',
-      title: 'Utvecklare',
-    },
-    {
-      id: 3,
-      firstName: 'Anna',
-      lastName: 'Eriksson',
-      title: 'Divisionschef',
-    },
-  ]
+  const GET_EMPLOYEES = gql`
+    query getEmployees {
+      employees {
+        id
+        firstName
+        lastName
+        title
+      }
+    }
+  `
 
   return (
-    <>
-      {employees.map((employee, index) => {
-        return <EmployeeCard key={index} employee={employee} />
-      })}
-    </>
+    <Query query={GET_EMPLOYEES}>
+      {({ loading, error, data }: QueryResult<{ employees: Employee[] }>) => {
+        return (
+          <>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <Error errorMessage={error.message} />
+            ) : data ? (
+              data.employees.map((employee, index) => {
+                return <EmployeeCard key={index} employee={employee} />
+              })
+            ) : (
+              <Error errorMessage="No data found" />
+            )}
+          </>
+        )
+      }}
+    </Query>
   )
 }
 

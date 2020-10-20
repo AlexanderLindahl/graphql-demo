@@ -56,17 +56,11 @@ const employees: Employee[] = [
 const EmployeePage = (props: EmployeePageProps) => {
   const id = parseInt(props.match.params.id)
 
-  const getData = (): { employee: Employee } => {
-    return {
-      employee: employees.filter((employee) => {
-        return employee.id === id
-      })[0],
-    }
-  }
+  const employee: Employee = employees.filter((employee) => {
+    return employee.id === id
+  })[0]
 
-  const data = getData()
-
-  return data ? <EmployeeInfo employee={data.employee} /> : <Redirect to="/" />
+  return <EmployeeInfo employee={employee} />
 }
 
 export default EmployeePage

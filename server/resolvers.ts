@@ -10,7 +10,7 @@ export default {
   },
 }
 
-const findEmployeeById = (id): Employee => {
+const findEmployeeById = (id: number): Employee => {
   return employees.filter((employee) => {
     return id === employee.id
   })[0]

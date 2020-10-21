@@ -18,27 +18,6 @@ interface EmployeeInput {
   address: string
 }
 
-const ADD_EMPLOYEE = gql`
-  mutation employee(
-    $firstName: String
-    $lastName: String
-    $title: String
-    $email: String
-    $phoneNumber: String
-    $address: String
-  ) {
-    addEmployee(
-      firstName: $firstName
-      lastName: $lastName
-      title: $title
-      email: $email
-      phoneNumber: $phoneNumber
-      address: $address
-    ) {
-      id
-    }
-  }
-`
 const AddEmployeeModal = (props: AddEmployeeModalProps) => {
   const { showModal, setShowModal } = props
   const classes = useAddEmployeeStyles()
@@ -51,26 +30,9 @@ const AddEmployeeModal = (props: AddEmployeeModalProps) => {
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
     >
-      <Mutation mutation={ADD_EMPLOYEE}>
-        {(addEmployee: MutationFunction<string, EmployeeInput>) => {
-          const submitEmployee = (input: EmployeeInput) => {
-            addEmployee({
-              variables: {
-                firstName: input.firstName,
-                lastName: input.lastName,
-                title: input.title,
-                email: input.email,
-                phoneNumber: input.phoneNumber,
-                address: input.address,
-              },
-            }).then((res: any) => {
-              window.location.href = `/employee/${res.data.addEmployee.id}`
-            })
-          }
-
-          return <AddEmployeeForm submitEmployee={submitEmployee} />
-        }}
-      </Mutation>
+      <AddEmployeeForm
+        submitEmployee={/*submitEmployee*/ () => console.log('Implement me!')}
+      />
     </Modal>
   )
 }

@@ -1,50 +1,27 @@
 import React from 'react'
 import EmployeeCard from '../EmployeeCard/EmployeeCard'
-import { Query, QueryResult } from 'react-apollo'
-import gql from 'graphql-tag'
 import Loading from '../EmployeePage/Loading'
 import Error from '../EmployeePage/Error'
+import { useEmployees } from '../../../../client/src/graphql/query/Employees'
 
 const Employees = () => {
-  interface Employee {
-    id: number
-    firstName: string
-    lastName: string
-    title: string
+  const { loading, error, data } = useEmployees()
+
+  if (loading) {
+    return <Loading />
+  } else if (error) {
+    return <Error errorMessage={error.message} />
+  } else if (data) {
+    return (
+      <>
+        {data.employees.map((employee, index) => (
+          <EmployeeCard key={index} employee={employee} />
+        ))}
+      </>
+    )
+  } else {
+    return <Error errorMessage="No data found" />
   }
-
-  const GET_EMPLOYEES = gql`
-    query getEmployees {
-      employees {
-        id
-        firstName
-        lastName
-        title
-      }
-    }
-  `
-
-  return (
-    <Query query={GET_EMPLOYEES}>
-      {({ loading, error, data }: QueryResult<{ employees: Employee[] }>) => {
-        return (
-          <>
-            {loading ? (
-              <Loading />
-            ) : error ? (
-              <Error errorMessage={error.message} />
-            ) : data ? (
-              data.employees.map((employee, index) => {
-                return <EmployeeCard key={index} employee={employee} />
-              })
-            ) : (
-              <Error errorMessage="No data found" />
-            )}
-          </>
-        )
-      }}
-    </Query>
-  )
 }
 
 export default Employees

@@ -1,6 +1,6 @@
+import { Button, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { TextField, Button, Typography } from '@material-ui/core'
-import { useAddEmployeeStyles } from '../../Style'
+import { useAddEmployee } from '../../../../client/src/graphql/mutation/AddEmployee'
 
 interface EmployeeInput {
   firstName: string
@@ -10,12 +10,8 @@ interface EmployeeInput {
   phoneNumber: string
   address: string
 }
-interface AddEmployeeFormProps {
-  submitEmployee: (input: EmployeeInput) => void
-}
-const AddEmployeeForm = (props: AddEmployeeFormProps) => {
-  const { submitEmployee } = props
-  const classes = useAddEmployeeStyles()
+const AddEmployeeForm = () => {
+  const [addEmployee, { loading, error, data }] = useAddEmployee()
 
   const [employeeInput, setEmployeeInput] = useState<EmployeeInput>({
     firstName: '',
@@ -47,13 +43,9 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
   }
   return (
     <div>
-      {' '}
-      <form className={classes.form} noValidate autoComplete="off">
-        <Typography variant="h6" className={classes.title}>
-          Add New Employee
-        </Typography>
+      <form noValidate autoComplete="off">
+        <Typography variant="h6">Add New Employee</Typography>
         <TextField
-          className={classes.input}
           label="First Name"
           variant="outlined"
           value={employeeInput.firstName}
@@ -62,7 +54,6 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
           }}
         />
         <TextField
-          className={classes.input}
           label="Last Name"
           variant="outlined"
           value={employeeInput.lastName}
@@ -71,7 +62,6 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
           }}
         />
         <TextField
-          className={classes.input}
           label="Phone Number"
           variant="outlined"
           value={employeeInput.phoneNumber}
@@ -80,16 +70,14 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
           }}
         />
         <TextField
-          className={classes.input}
           label="Email"
           variant="outlined"
           value={employeeInput.email}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setEmail(e.target.value)
           }}
         />
         <TextField
-          className={classes.input}
           label="Address"
           variant="outlined"
           value={employeeInput.address}
@@ -98,7 +86,6 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
           }}
         />
         <TextField
-          className={classes.input}
           label="Title"
           variant="outlined"
           value={employeeInput.title}
@@ -108,10 +95,9 @@ const AddEmployeeForm = (props: AddEmployeeFormProps) => {
         />
 
         <Button
-          className={classes.submitButton}
           variant="contained"
           color="primary"
-          onClick={() => submitEmployee(employeeInput)}
+          onClick={() => addEmployee({ variables: { ...employeeInput } })}
         >
           Submit
         </Button>

@@ -1,26 +1,24 @@
-import React from 'react'
 import './App.css'
-import Navbar from './components/Navbar'
 import {
   BrowserRouter as Router,
-  Switch,
+  Navigate,
   Route,
-  Redirect,
+  Routes,
 } from 'react-router-dom'
-import Employees from './components/Employees'
-import EmployeePage from './components/EmployeePage'
+import Employees from '../../client/src/components/Employees'
+import EmployeePage from '../../client/src/components/EmployeePage'
+import NavBar from './components/NavBar'
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
-
-        <Switch>
-          <Route exact path="/employees" component={Employees} />
-          <Route path="/employee/:id" component={EmployeePage} />
-          <Redirect from="*" to="/employees" />
-        </Switch>
+        <NavBar />
+        <Routes>
+          <Route path="/employees" element={<Employees />} />
+          <Route path="/employee/:id" element={<EmployeePage />} />
+          <Route path="/" element={<Navigate to="/employees" replace />} />
+        </Routes>
       </Router>
     </div>
   )

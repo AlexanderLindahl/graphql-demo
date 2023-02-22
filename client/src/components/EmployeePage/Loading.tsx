@@ -1,5 +1,5 @@
+import { Typography } from '@mui/material'
 import React from 'react'
-import { Typography } from '@material-ui/core'
 
 const Loading = () => (
   <Typography component="h5" variant="h5">

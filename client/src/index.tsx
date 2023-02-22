@@ -1,23 +1,22 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
-import * as serviceWorker from './serviceWorker'
-
-import ApolloClient from 'apollo-boost'
-import { ApolloProvider } from 'react-apollo'
+import reportWebVitals from './reportWebVitals'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:9000/graphql',
+  uri: 'http://localhost:8000/graphql',
+  cache: new InMemoryCache(),
 })
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 )
 
-serviceWorker.unregister()
+reportWebVitals()

@@ -1,21 +1,15 @@
 import React from 'react'
-import { Card, CardContent, Typography, Box } from '@material-ui/core'
-import { Employee } from './EmployeePage'
-import { useEmployeePageStyles } from '../../Style'
-import { useTheme } from '@material-ui/core/styles'
+import { Employee } from '../../../../client/src/types/Employee'
+import { Box, Card, CardContent, Typography } from '@mui/material'
 
 interface ErrorProps {
   employee: Employee
 }
 const EmployeeInfo = (props: ErrorProps) => {
-  const theme = useTheme()
-
-  const classes = useEmployeePageStyles(theme)
-
   return (
-    <Card className={classes.root}>
-      <div className={classes.details}>
-        <CardContent className={classes.content}>
+    <Card>
+      <div>
+        <CardContent>
           <Box component="span" m={1}>
             <Typography component="h2" variant="h2">
               {`${props.employee.firstName} ${props.employee.lastName}`}

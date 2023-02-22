@@ -1,66 +1,25 @@
 import React from 'react'
-import gql from 'graphql-tag'
-import { Query, QueryResult } from 'react-apollo'
-import { Redirect } from 'react-router-dom'
 import Error from './Error'
 import Loading from './Loading'
 import EmployeeInfo from './EmployeeInfo'
+import { useParams } from 'react-router-dom'
+import { useEmployee } from '../../../../client/src/graphql/query/Employee'
 
-interface EmployeePageProps {
-  match: { params: { id: string } }
-}
+const EmployeePage = () => {
+  const { id } = useParams()
 
-export interface Employee {
-  id: number
-  firstName: string
-  lastName: string
-  title: string
-  email: string
-  phoneNumber: string
-  address: string
-  employmentDate: string
-}
+  // {loading, error, data}
+  const result = useEmployee(parseInt(id!!))
 
-const EmployeePage = (props: EmployeePageProps) => {
-  const id = parseInt(props.match.params.id)
-  const GET_EMPLOYEE = gql`
-    query getEmployee($id: Int!) {
-      employee(id: $id) {
-        id
-        firstName
-        lastName
-        title
-        email
-        phoneNumber
-        address
-        employmentDate
-      }
-    }
-  `
-
-  return (
-    <Query query={GET_EMPLOYEE} variables={{ id }}>
-      {({
-        loading,
-        error,
-        data,
-      }: QueryResult<{ employee: Employee }, Record<string, number>>) => {
-        return (
-          <>
-            {loading ? (
-              <Loading />
-            ) : error ? (
-              <Error errorMessage={error.message} />
-            ) : data ? (
-              <EmployeeInfo employee={data.employee} />
-            ) : (
-              <Redirect to="" />
-            )}
-          </>
-        )
-      }}
-    </Query>
-  )
+  if (result.loading) {
+    return <Loading />
+  } else if (result.data) {
+    return <EmployeeInfo employee={result.data.employee} />
+  } else {
+    const errorMessage =
+      result?.error?.message || 'Something horrific happenend'
+    return <Error errorMessage={errorMessage} />
+  }
 }
 
 export default EmployeePage

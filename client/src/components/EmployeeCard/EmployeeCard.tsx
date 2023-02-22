@@ -1,7 +1,6 @@
+import { Card, CardContent, Typography } from '@mui/material'
 import React from 'react'
-import { useEmployeeCardStyles } from '../../Style'
 import { Link } from 'react-router-dom'
-import { Card, CardContent, Typography } from '@material-ui/core'
 
 interface EmployeeCardProps {
   employee: Employee
@@ -16,14 +15,12 @@ interface Employee {
 const EmployeeCard = (props: EmployeeCardProps) => {
   const { employee } = props
 
-  const classes = useEmployeeCardStyles()
-
   return (
-    <div className={classes.root}>
+    <div>
       <Link to={`/employee/${employee.id}`}>
-        <Card className={classes.card}>
-          <div className={classes.details}>
-            <CardContent className={classes.content}>
+        <Card>
+          <div>
+            <CardContent>
               <Typography component="h5" variant="h5">
                 {`${employee.firstName} ${employee.lastName}`}
               </Typography>

@@ -1,20 +1,29 @@
-import { Employee, employees } from './employees'
+import { Employee, employees } from './employees.js'
+import { Skill, skills } from './skills.js'
 
-export default {
+export const resolvers = {
   Query: {
     employees: () => employees,
-    employee: (_, { id }) => findEmployeeById(id),
+    employee: (_: any, { id }: { id: number }) => findEmployeeById(id),
+    skills: (_: any, { employeeId }: { employeeId: number }) =>
+      findSkills(employeeId),
   },
+
+  Employee: {
+    skills: (employee) => findSkills(employee.id),
+  },
+
   Mutation: {
-    addEmployee: (_, params) => addEmployee(params),
+    addEmployee: (_: any, params: Employee) => addEmployee(params),
   },
 }
 
 const findEmployeeById = (id: number): Employee => {
-  return employees.filter((employee) => {
-    return id === employee.id
-  })[0]
+  return employees.find((employee) => id === employee.id)
 }
+
+const findSkills = (employeeId: number): Skill[] =>
+  skills.filter((skill) => skill.employeeId === employeeId)
 
 const addEmployee = (input: Employee) => {
   const today = new Date()
